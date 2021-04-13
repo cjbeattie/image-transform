@@ -24,6 +24,9 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
 
 # you can overwrite defaults here
 #  stage: dev
@@ -63,6 +66,12 @@ functions:
     events:
       - http:
           path: hello
+          method: post
+  imageTransform:
+    handler: handler.imageTransform
+    events:
+      - http:
+          path: imageTransform
           method: post
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
