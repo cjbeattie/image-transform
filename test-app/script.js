@@ -4,10 +4,10 @@ const transformImage = (element) => {
         const reader = new FileReader();
         reader.onloadend = function () {
             console.log(`RESULT for file ${i + 1}`, reader.result);
-            const fileBinary = reader.result;
+            const fileDataURL = reader.result;
 
             axios
-                .post('https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform', fileBinary)
+                .post('https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform', fileDataURL)
                 .then(response => {
                     console.log('Server Response: ', response)
                     const imageElement = document.createElement('IMG');

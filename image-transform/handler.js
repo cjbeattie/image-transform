@@ -4,7 +4,7 @@ const sharp = require('sharp');
 module.exports.imageTransform = async (event) => {
 
   // Check input is the correct format
-  if (!event.body.startsWith('data:')) {
+  if (!(event.body.startsWith('data:image/jpeg') || event.body.startsWith('data:image/png') || event.body.startsWith('data:image/gif') || event.body.startsWith('data:image/webp'))) {
     return {
       statusCode: 400,
       headers: {
@@ -13,26 +13,10 @@ module.exports.imageTransform = async (event) => {
         'Access-Control-Request-Headers': '*',
       },
       body: {
-        'Error': 'Image must be encoded as a data URL.'
+        'Error': 'Input must be an image, must be encoded as a data URL and be one of the following formats: jpeg, png, gif, webp.'
       },
     };
   }
-
-  if (!event.body.startsWith('data:image')) {
-    return {
-      statusCode: 400,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Request-Headers': '*',
-      },
-      body: {
-        'Error': 'Only image files are supported.'
-      },
-    };
-  }
-
-  console.log('Event: ', event);
 
   // Extract the image data from the base64 encoded string
   const imageData = event.body.split(';base64,').pop()
@@ -55,8 +39,6 @@ module.exports.imageTransform = async (event) => {
     // Construct response body with base64 header
     const image = `data:${imageType};base64,${outputBuffer.toString('base64')}`;
 
-    console.log('IMAGE OUTPUT:', image);
-
     return {
       statusCode: 200,
       headers: {
@@ -68,7 +50,6 @@ module.exports.imageTransform = async (event) => {
       body: image,
     };
   } catch (error) {
-    console.log(`Error: ${error}`)
     return {
       statusCode: 500,
       headers: {
