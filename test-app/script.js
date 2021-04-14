@@ -38,11 +38,11 @@ const encodeImage = (element) => {
             const fileBinary = reader.result;
 
             axios
-                .post("https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform", fileBinary)
+                .post("https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform?dataurl=true", fileBinary)
                 .then(response => {
                     console.log("response", response)
                     const imageElement = document.createElement("IMG");
-                    imageElement.src = 'data:image/jpeg;base64,' + response.data;
+                    imageElement.src = response.data;
                     document.getElementById("output").appendChild(imageElement);
                 })
                 .catch((reason) => {
@@ -51,17 +51,17 @@ const encodeImage = (element) => {
 
 
         }
-        reader.readAsDataURL(file);
+        reader.readAsArrayBuffer(file);
 
         // const image = document.getElementById('input');
         // image.src = URL.createObjectURL(file);
 
-        // reader.onload = function (event) {
-        //     // document.getElementById('input').src = event.target.result;
-        //     const imageElement = document.createElement("IMG");
-        //     imageElement.src = event.target.result;
-        //     document.getElementById("input").appendChild(imageElement);
-        // };
+        reader.onload = function (event) {
+            // document.getElementById('input').src = event.target.result;
+            const imageElement = document.createElement("IMG");
+            imageElement.src = URL.createObjectURL(file);
+            document.getElementById("input").appendChild(imageElement);
+        };
     }
 }
 

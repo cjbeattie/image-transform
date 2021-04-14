@@ -1,22 +1,22 @@
 'use strict';
 const sharp = require('sharp');
 
-module.exports.hello = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+// module.exports.hello = async (event) => {
+//   return {
+//     statusCode: 200,
+//     body: JSON.stringify(
+//       {
+//         message: 'Go Serverless v1.0! Your function executed successfully!',
+//         input: event,
+//       },
+//       null,
+//       2
+//     ),
+//   };
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
-};
+//   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
+//   // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+// };
 
 module.exports.imageTransform = async (event) => {
 
@@ -24,25 +24,30 @@ module.exports.imageTransform = async (event) => {
 
   let updatedBody;
   if (event.isBase64Encoded) {
-    updatedBody = Buffer.from(event.body, 'base64').toString('ascii');
-    console.log(updatedBody);
+    updatedBody = Buffer.from(event.body, 'base64');
+    console.log('*******Updated body: ', updatedBody);
   }
 
   // Extract image type from the request header
   const imageType = 'image/png';//event.headers["Content-Type"];
 
   // Extract the image data from the base64 encoded string
-  const imageData = updatedBody.split(';base64,').pop() // returns an array, ok?
-  const imgBuffer = Buffer.from(imageData, 'base64');
+  //const imageData = updatedBody.split(';base64,').pop() // returns an array, ok?
+  //const imgBuffer = Buffer.from(updatedBody, "binary");
 
   // Use sharp to process the image
   let outputBuffer;
   try {
-    outputBuffer = await sharp(imgBuffer)
+    outputBuffer = await sharp(updatedBody)
       .negate()
       .toBuffer();
 
-    const image = `${outputBuffer.toString('base64')}`;
+
+    const dataUrlPrefix = event.queryStringParameters && event.queryStringParameters.dataurl ? 'data:image/png;base64,' : '';
+    const image = `${dataUrlPrefix}${outputBuffer.toString('base64')}`;
+
+    console.log('IMAGE:', image);
+
 
     return {
       statusCode: 200,

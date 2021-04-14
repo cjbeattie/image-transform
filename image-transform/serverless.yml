@@ -76,6 +76,10 @@ functions:
           cors:
             origin: "*"
             headers: "*"
+          request:
+            parameters:
+              querystrings:
+                dataurl: false
 
 
 #    The following are a few example events you can configure
