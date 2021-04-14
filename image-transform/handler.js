@@ -11,14 +11,14 @@ const CORS_HEADERS = {
 
 module.exports.imageTransform = async (event) => {
 
-  // // Check input is the correct format
+  // Check input is the correct format
   if (!VALID_FORMATS.some(format => event.body.startsWith(`data:image/${format}`))) {
     return {
       statusCode: 400,
       headers: CORS_HEADERS,
-      body: {
+      body: JSON.stringify({
         'Error': 'Input must be an image, must be encoded as a data URL and be one of the following formats: jpeg, png, gif, webp.'
-      },
+      }),
     };
   }
 
