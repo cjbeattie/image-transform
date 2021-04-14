@@ -3,14 +3,13 @@ const transformImage = (element) => {
         const file = element.files[i];
         const reader = new FileReader();
         reader.onloadend = function () {
-            console.log(`RESULT for file ${i + 1}`, reader.result);
             const fileDataURL = reader.result;
 
             axios
                 .post('https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform', fileDataURL)
                 .then(response => {
-                    console.log('Server Response: ', response)
                     const imageElement = document.createElement('IMG');
+                    imageElement.setAttribute('style', "max-width: 400px");
                     imageElement.src = response.data;
                     document.getElementById('output').appendChild(imageElement);
                 })
@@ -24,6 +23,7 @@ const transformImage = (element) => {
 
         reader.onload = function (event) {
             const imageElement = document.createElement('IMG');
+            imageElement.setAttribute('style', "max-width: 400px");
             imageElement.src = URL.createObjectURL(file);
             document.getElementById('input').appendChild(imageElement);
         };
