@@ -31,20 +31,11 @@ const transformImage = (element) => {
 }
 
 const reset = () => {
-    console.log("reset");
-
     let inputNode = document.getElementById('input');
     inputNode.innerHTML = "";
-    // while (inputNode.firstChild) {
-    //     inputNode.removeChild(inputNode.firstChild);
-    // }
 
     let outputNode = document.getElementById('output');
     outputNode.innerHTML = "";
-
-    // while (outputNode.firstChild) {
-    //     inputNode.removeChild(outputNode.firstChild);
-    // }
 
     window.location.reload();
 }
