@@ -1,5 +1,4 @@
 'use strict';
-// const { type } = require('node:os');
 const sharp = require('sharp');
 
 module.exports.hello = async (event) => {
@@ -22,50 +21,53 @@ module.exports.hello = async (event) => {
 module.exports.imageTransform = async (event) => {
 
   console.log(event);
-  // const transformer = sharp()
-  //   .negate()
-  //   .toBuffer(function (err, outputBuffer, info) {
-  //     // outputBuffer contains 200px high JPEG image data,
-  //     // auto-rotated using EXIF Orientation tag
-  //     // info.width and info.height contain the dimensions of the resized image
-  //   });
-  // readableStream.pipe(transformer);
 
-  // Extract the image type from the base64 encoded string
-  // const imageTypeEndIndex = event.body.indexOf(';base64,')
-  // const imageType = event.body.slice(5, imageTypeEndIndex)
-  // const headers = JSON.parse(event.headers);
-  // console.log("*** obj is: ", obj);
-  // const imageType = headers.content - type;
+  let updatedBody;
+  if (event.isBase64Encoded) {
+    updatedBody = Buffer.from(event.body, 'base64').toString('ascii');
+    console.log(updatedBody);
+  }
 
-  const imageType = event.headers["Content-Type"];
+  // Extract image type from the request header
+  const imageType = 'image/png';//event.headers["Content-Type"];
 
   // Extract the image data from the base64 encoded string
-  const imageData = event.body.split(';base64,').pop() // returns an array, ok?
+  const imageData = updatedBody.split(';base64,').pop() // returns an array, ok?
   const imgBuffer = Buffer.from(imageData, 'base64');
 
-  const outputBuffer = await sharp(imgBuffer)
-    .negate()
-    .toBuffer()
-    .catch(err => console.log(`error: ${err}`))
+  // Use sharp to process the image
+  let outputBuffer;
+  try {
+    outputBuffer = await sharp(imgBuffer)
+      .negate()
+      .toBuffer();
 
-  const image = `data:${imageType};base64,${outputBuffer.toString('base64')}`;
-  // .then(data => {
-  //   console.log('success: ', data)
-  //   console.log(`data:image/png;base64,${data.toString('base64')}`)
-  // })
+    const image = `${outputBuffer.toString('base64')}`;
 
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': imageType,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Request-Headers': '*',
+      },
+      body: image,
+    };
+  } catch (err) {
+    console.log(`error: ${err}`)
+    return {
+      statusCode: 400,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Request-Headers': '*',
+      },
+      body: err,
+    };
+  }
 
-  return {
-    statusCode: 200,
-    headers: {
-      'Content-Type': imageType,
-      // 'Content-Type': 'application/json',
-      // 'Content-Type': 'image/jpeg',
-    },
-    body: image,
-  };
+  // Construct response body with base64 header
+  // const image = `data:${imageType};base64,${outputBuffer.toString('base64')}`;
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };
