@@ -9,19 +9,20 @@
 </head>
 
 <body>
+
     <h1>Image Transformer</h1>
     <form name="uploadForm">
         <div>
-            <input type="file" onchange="encodeImage(this)" multiple />
+            <input type="file" onchange="transformImage(this)" multiple />
         </div>
-        <h2>Input:</h2>
-        <div id="input"></div>
-        <h2>Output</h2>
-        <div id="output"></div>
-        <h2>Mytest</h2>
-        <img
-            src="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAeACADASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAABwIFAQQGCP/EACUQAAICAgIBBAIDAAAAAAAAAAECAwQFEQAGEgchMVFBcSJCgf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDypy76l1bMdtygx+Bpvasa22vZUH2xPsByogiksTxwwoXlkYKqqNkk+wA4+d0xXZ+gdRwvWus4u3FPYiW3k7taIs0su9iPyHvofkcAJydC1i8jYo34Wgt13McsbfKsPkc1eLPrliJbEOD7e1eSu2XhCW4pEKslhBpt/v54TcBD9DK1Q92GTyPg1bE15LxRv7si/wAQP95X2vUvtr3rc1fP5CCOeZ5RGkxCr5HegPxzjkdk34MV2NHR1scjwGronZbPqRh8h0jtt6azbsKbGLtytto51BPgfsEb4M2IXr2JYZBqSNijD6IOjzEUjxSLJE7I6nYZTog/vkfn3PA//9k=">
     </form>
+    <h2>Input:</h2>
+    <div id="input"></div>
+    <h2>Output</h2>
+    <div id="output"></div>
+    <div>
+        <button type="button" onclick="reset()">Reset</button>
+    </div>
 </body>
 
 </html>

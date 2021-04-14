@@ -48,6 +48,7 @@ module.exports.imageTransform = async (event) => {
   let outputBuffer;
   try {
     outputBuffer = await sharp(imgBuffer)
+      .removeAlpha() // required for png files so they don't turn transparent when negated
       .negate()
       .toBuffer();
 
