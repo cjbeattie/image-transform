@@ -10,4 +10,4 @@ Response is a base64-encoded data URL with the transformed image in the same for
 ## Test app
 https://cjbeattie.github.io/image-transform/test-app/index.html
 
-(supports multiple file uploads)
+(Supports multiple file uploads. Large images may take a while to give a result.)
