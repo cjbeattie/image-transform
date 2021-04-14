@@ -51,7 +51,8 @@ const encodeImage = (element) => {
 
 
         }
-        reader.readAsArrayBuffer(file);
+        // reader.readAsArrayBuffer(file);
+        reader.readAsDataURL(file);
 
         // const image = document.getElementById('input');
         // image.src = URL.createObjectURL(file);

@@ -20,19 +20,36 @@ const sharp = require('sharp');
 
 module.exports.imageTransform = async (event) => {
 
+  // if (!event.body.startsWith('data:')) {
+  //   return {
+  //     statusCode: 400,
+  //     headers: {
+  //       'Access-Control-Allow-Origin': '*',
+  //       'Access-Control-Allow-Credentials': true,
+  //       'Access-Control-Request-Headers': '*',
+  //     },
+  //     body: {
+  //       'Error': 'Only Data URLs with prefixes are supported, e.g. data:image/jpeg;base64,'
+  //     },
+  //   };
+  // }
+
   console.log('Event: ', event);
 
   // Extract the image data from the base64 encoded string
   const imageData = event.body.split(';base64,').pop()
 
   // Extract the image type from the base64 encoded string
+  const imageTypeEndIndex = event.body.indexOf(';base64,')
   const imageType = event.body.slice(5, imageTypeEndIndex)
-  const imgBuffer = Buffer.from(updatedBody, "binary");
+  // const imgBuffer = Buffer.from(updatedBody, "binary");
+  const imgBuffer = Buffer.from(imageData, 'base64');
+
 
   // Use sharp to process the image
   let outputBuffer;
   try {
-    outputBuffer = await sharp(updatedBody)
+    outputBuffer = await sharp(imgBuffer)
       .negate()
       .toBuffer();
 
