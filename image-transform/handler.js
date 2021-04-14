@@ -20,20 +20,14 @@ const sharp = require('sharp');
 
 module.exports.imageTransform = async (event) => {
 
-  console.log(event);
-
-  let updatedBody;
-  if (event.isBase64Encoded) {
-    updatedBody = Buffer.from(event.body, 'base64');
-    console.log('*******Updated body: ', updatedBody);
-  }
-
-  // Extract image type from the request header
-  const imageType = 'image/png';//event.headers["Content-Type"];
+  console.log('Event: ', event);
 
   // Extract the image data from the base64 encoded string
-  //const imageData = updatedBody.split(';base64,').pop() // returns an array, ok?
-  //const imgBuffer = Buffer.from(updatedBody, "binary");
+  const imageData = event.body.split(';base64,').pop()
+
+  // Extract the image type from the base64 encoded string
+  const imageType = event.body.slice(5, imageTypeEndIndex)
+  const imgBuffer = Buffer.from(updatedBody, "binary");
 
   // Use sharp to process the image
   let outputBuffer;
@@ -42,12 +36,13 @@ module.exports.imageTransform = async (event) => {
       .negate()
       .toBuffer();
 
+    // Construct response body with base64 header
+    const image = `data:${imageType};base64,${outputBuffer.toString('base64')}`;
 
-    const dataUrlPrefix = event.queryStringParameters && event.queryStringParameters.dataurl ? 'data:image/png;base64,' : '';
-    const image = `${dataUrlPrefix}${outputBuffer.toString('base64')}`;
+    // const dataUrlPrefix = event.queryStringParameters && event.queryStringParameters.dataurl ? 'data:image/png;base64,' : '';
+    // const image = `${dataUrlPrefix}${outputBuffer.toString('base64')}`;
 
-    console.log('IMAGE:', image);
-
+    console.log('IMAGE OUTPUT:', image);
 
     return {
       statusCode: 200,
@@ -59,8 +54,8 @@ module.exports.imageTransform = async (event) => {
       },
       body: image,
     };
-  } catch (err) {
-    console.log(`error: ${err}`)
+  } catch (error) {
+    console.log(`Error: ${error}`)
     return {
       statusCode: 400,
       headers: {
@@ -71,8 +66,4 @@ module.exports.imageTransform = async (event) => {
       body: err,
     };
   }
-
-  // Construct response body with base64 header
-  // const image = `data:${imageType};base64,${outputBuffer.toString('base64')}`;
-
 };

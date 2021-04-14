@@ -38,15 +38,15 @@ const encodeImage = (element) => {
             const fileBinary = reader.result;
 
             axios
-                .post("https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform?dataurl=true", fileBinary)
+                .post('https://grxe35576l.execute-api.us-east-1.amazonaws.com/dev/imageTransform', fileBinary)
                 .then(response => {
-                    console.log("response", response)
-                    const imageElement = document.createElement("IMG");
+                    console.log('Server Response: ', response)
+                    const imageElement = document.createElement('IMG');
                     imageElement.src = response.data;
-                    document.getElementById("output").appendChild(imageElement);
+                    document.getElementById('output').appendChild(imageElement);
                 })
-                .catch((reason) => {
-                    console.log("Error", reason);
+                .catch((error) => {
+                    console.log('Error: ', error);
                 });
 
 
@@ -58,9 +58,9 @@ const encodeImage = (element) => {
 
         reader.onload = function (event) {
             // document.getElementById('input').src = event.target.result;
-            const imageElement = document.createElement("IMG");
+            const imageElement = document.createElement('IMG');
             imageElement.src = URL.createObjectURL(file);
-            document.getElementById("input").appendChild(imageElement);
+            document.getElementById('input').appendChild(imageElement);
         };
     }
 }
